@@ -55,7 +55,12 @@ vector<vector<int>> readFile(const char* fileName)
 		{
 			tempVec.push_back(number);
 		}
+
+		//prevent writing empty vector (if in the end of the file there are several \n
+		if(tempVec.size() > 0) 
+		{
 			arr.push_back(tempVec);
+		}
 	}
 
 	return arr;
@@ -80,42 +85,24 @@ Path findShortestPath(vector<vector<int>> num, int point, int depth)
 
 	else
 	{
-		Path p1;
+		Path p1 = findShortestPath(num, point, depth + 1);;
 		Path p2;
 
 		//if column is even: car can go to the same row index or index+1
-		if(depth % 2 == 0)
-		{
-			p1 = findShortestPath(num, point, depth + 1);
-
-			if(point < num[0].size() - 1) //check out of range
-			{
-				p2 = findShortestPath(num, point + 1, depth + 1);
-			}
-			else
-			{
-				p1.total += num[depth][point];
-				p1.intersections.push_back(num[depth][point]);
-				return p1;
-			}
-		}
-
 		//if column is odd: car can go to the same row index or index-1
+		if((depth % 2 == 0) && (point < num[0].size() - 1)) //check out of range
+		{
+			p2 = findShortestPath(num, point + 1, depth + 1);
+		}		
+		else if(point != 0) //check out of range
+		{
+			p2 = findShortestPath(num, point - 1, depth + 1);
+		}
 		else
 		{
-			p2 = findShortestPath(num, point, depth + 1);
-
-			if(point != 0) //check out of range
-			{
-				p1 = findShortestPath(num, point - 1, depth + 1);
-			}
-			else
-			{
-				p2.total += num[depth][point];
-				p2.intersections.push_back(num[depth][point]);
-				return p2;
-			}
-		
+			p1.total += num[depth][point];
+			p1.intersections.push_back(num[depth][point]);
+			return p1;
 		}
 
 		//compare which of two paths is more effective and return it to the highest level
@@ -137,8 +124,6 @@ Path findShortestPath(vector<vector<int>> num, int point, int depth)
 int main()
 {
 	vector<vector<int>> numbers = readFile("numbers.txt");
-
-	//Path path0 = findShortestPath(numbers, 0);
 	
 	for(int i = 0; i < numbers[0].size(); i++)
 	{
