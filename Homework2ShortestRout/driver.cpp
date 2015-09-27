@@ -85,16 +85,18 @@ Path findShortestPath(vector<vector<int>> num, int point, int depth)
 
 	else
 	{
-		Path p1 = findShortestPath(num, point, depth + 1);;
+		Path p1 = findShortestPath(num, point, depth + 1);
 		Path p2;
 
 		//if column is even: car can go to the same row index or index+1
 		//if column is odd: car can go to the same row index or index-1
+
+		//if depth even point = size()-1
 		if((depth % 2 == 0) && (point < num[0].size() - 1)) //check out of range
 		{
 			p2 = findShortestPath(num, point + 1, depth + 1);
 		}		
-		else if(point != 0) //check out of range
+		else if((depth % 2 != 0) && (point != 0)) //check out of range
 		{
 			p2 = findShortestPath(num, point - 1, depth + 1);
 		}
